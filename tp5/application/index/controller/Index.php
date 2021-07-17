@@ -10,8 +10,6 @@ class Index
 
     public function hello($name = 'ThinkPHP5')
     {
-        $data=[];
-      
-        return json($_SERVER);
+        return 'hello,' . $name;
     }
 }
