@@ -17,14 +17,16 @@ return [
     'type'        => 'File',
     // 日志保存目录
     'path'        => '',
+    'file_size'     =>2097152,
+    'time_format'   =>'c',
     // 日志记录级别
-    'level'       => [],
+    'level'       => ['info','warning','error','critical','alert','emergency','sql'],
     // 单文件日志写入
-    'single'      => false,
+    'single'      => true,
     // 独立日志级别
-    'apart_level' => [],
+    'apart_level' => ['error'],
     // 最大日志文件数量
-    'max_files'   => 0,
+    'max_files'   => 20,
     // 是否关闭日志写入
     'close'       => false,
 ];
