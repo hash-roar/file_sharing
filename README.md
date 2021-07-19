@@ -42,3 +42,25 @@
 	    file_size varchar(50) COMMENT "文件大小"
 	    file_img VARCHAR(100) COMMENT "封面,可有可无"
 	)
+INSERT INTO directory (
+    dir_id,
+    dir_parentid,
+    dir_name,
+    dir_file_num,
+    dir_acu_path,
+    dir_create_time
+  )
+VALUES (
+    1,
+    0,
+    "books",
+    0,
+    "../uploads/",
+    now()
+  );
+#####大文件上传
+	nginx配置加上  client_max_body_size 100m;
+	php.ini 改变
+	upload_max_filesize = 100M;
+	post_max_size = 100M;
+	

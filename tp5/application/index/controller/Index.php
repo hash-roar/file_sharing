@@ -7,7 +7,6 @@ class Index
 {
     public function index()
     {
-        Log::record("test","error");
         return "logtest";
     }
 
