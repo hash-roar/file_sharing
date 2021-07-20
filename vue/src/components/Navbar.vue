@@ -3,24 +3,7 @@
   <div>
      <!-- 导航抽屉 -->
     <v-navigation-drawer v-model="drawer" app>
-      <v-list dense>
-        <v-list-item link>
-          <v-list-item-action>
-            <v-icon>mdi-home</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title>Home</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item link>
-          <v-list-item-action>
-            <v-icon>mdi-email</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title>Contact</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
+      <drawer1></drawer1>
     </v-navigation-drawer>
     <!-- 导航栏 -->
     <v-app-bar app color="indigo" dark>
@@ -35,7 +18,11 @@
 </template>
 
 <script>
+import Drawer1 from "./Drawer1.vue"
 export default {
+  components:{
+   Drawer1
+  },
   data: () => ({
     drawer: false,
   }),

@@ -1,50 +1,77 @@
 <template>
   <v-app>
-    <!-- 导航栏 -->
-      <navbar></navbar>
-  
-    <!-- 主体 -->
-      
-      <main-part></main-part>
-      
+    <v-container class="mx-auto pa-0 mt-16">
+      <v-card max-width="950">
+        <v-card-title class="text-center"> 搜书 </v-card-title>
+        <v-divider></v-divider>
+        <v-card-text>
+          <v-text-field
+            v-model="book_name"
+            append-outer-icon="mdi-magnify"
+            autofocus
+            clearable
+            @keydown.enter="search"
+          >
+            <template v-slot:append-outer>
+              <v-icon left color="blue" @click="search">mdi-magnify</v-icon>
+            </template>
+          </v-text-field>
+        </v-card-text>
+        <v-card-text>
+          <v-list-item v-for="item in files" :key="item.file_id">
+            <v-list-item-avatar>
+              <v-icon class="blue text--black">mdi-file-cloud-outline</v-icon>
+            </v-list-item-avatar>
 
-    <!-- 底部 -->
-    <v-footer color="indigo" app>
-      <v-btn @click="getMess">{{message}}sac</v-btn>
-      <span class="white--text">&copy; {{ new Date().getFullYear() }}</span>
-    </v-footer>
-    
+            <v-list-item-content>
+              <v-list-item-title v-text="item.file_name"></v-list-item-title>
+              <v-list-item-subtitle
+                >文件大小:{{ item.file_size }}B
+              </v-list-item-subtitle>
+            </v-list-item-content>
+
+            <v-list-item-action>
+              <v-btn icon :href="getFilePath(item)">
+                <v-icon color="grey lighten-1">mdi-arrow-collapse-down</v-icon>
+              </v-btn>
+            </v-list-item-action>
+          </v-list-item>
+        </v-card-text>
+      </v-card>
+    </v-container>
   </v-app>
 </template>
 
 <script>
-import Navbar from "./components/Navbar.vue";
-import Drawer from "./components/Drawer.vue";
-import MainPart from "./components/MainPart.vue";
-import axios from 'axios'
+import axios from "axios";
 export default {
   name: "App",
 
-  components: {
-    Drawer,
-    Navbar,
-    MainPart,
-  },
+  components: {},
 
   data: () => ({
-    drawer: false,
-    watcher: false,
-    message:""
+    book_name: "",
+    files: [],
   }),
-  methods:{
-    getMess(){
-      axios.get('/index/index/index/hello')
-           .then((res)=>{
-             this.message = res.data
-           }).catch(function(error){
-             console.log(error);
-           })
-    }
-  }
+  methods: {
+    search() {
+      let post = {
+        book_name: this.book_name,
+      };
+      axios
+        .post("/index/index/search/get_book_list", post)
+        .then((res) => {
+          this.files = res.data;
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    },
+    getFilePath(item) {
+      let path = item.file_acu_path;
+      let fullpath = "/index" + path.slice(1);
+      return fullpath;
+    },
+  },
 };
 </script>

@@ -1,7 +1,8 @@
 <template>
   <v-main>
     <div>
-      <form >
+      <v-card>
+        <form >
         <v-file-input
           v-model="files"
           counter
@@ -13,6 +14,7 @@
 
         <v-btn  class="mr-4" @click="submit">提交</v-btn>
       </form>
+      </v-card>
     </div>
   </v-main>
 </template>

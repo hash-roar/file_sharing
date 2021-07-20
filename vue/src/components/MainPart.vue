@@ -1,6 +1,6 @@
 <template>
   <v-main>
-    <v-card class="">
+    <v-card class="" img="/index/static/pixiv645.jpg">
       <!-- <v-btn @click.stop="downloadFile">download</v-btn> -->
       <v-list two-line subheader dense>
         <!--面包屑导航 -->
