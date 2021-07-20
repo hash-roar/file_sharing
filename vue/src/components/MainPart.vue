@@ -1,8 +1,8 @@
 <template>
   <v-main>
     <v-card class="">
-      <v-btn @click.stop="getNav">get</v-btn>
-      <v-list two-line subheader>
+      <!-- <v-btn @click.stop="downloadFile">download</v-btn> -->
+      <v-list two-line subheader dense>
         <!--面包屑导航 -->
         <v-subheader inset>
           <v-breadcrumbs :items="directory_nav">
@@ -30,7 +30,7 @@
           </v-dialog>
         </v-subheader>
 
-        <v-list-item>
+        <v-list-item v-if="directory_nav.length - 1" @click="getBack">
           <v-list-item-avatar>
             <v-icon class="grey lighten-1 white--text">mdi-folder</v-icon>
           </v-list-item-avatar>
@@ -46,7 +46,7 @@
           @click="changeDir(item)"
         >
           <v-list-item-avatar>
-            <v-icon class="grey lighten-1 white--text">mdi-folder</v-icon>
+            <v-icon class="blue lighten-1 white--text">mdi-folder</v-icon>
           </v-list-item-avatar>
 
           <v-list-item-content>
@@ -64,49 +64,24 @@
         </v-list-item>
 
         <v-divider inset></v-divider>
-
-        <v-subheader inset>Files </v-subheader>
-
-        <v-list-item v-for="item in files" :key="item.title">
-          <v-list-item-avatar>
-            <v-icon class="blue text--black">mdi-file-cloud-outline</v-icon>
-          </v-list-item-avatar>
-
-          <v-list-item-content>
-            <v-list-item-title v-text="item.file_name"></v-list-item-title>
-            <v-list-item-subtitle
-              v-text="item.file_upload_time"
-            ></v-list-item-subtitle>
-          </v-list-item-content>
-
-          <v-list-item-action>
-            <v-btn icon>
-              <v-icon color="grey lighten-1">mdi-arrow-collapse-down</v-icon>
-            </v-btn>
-          </v-list-item-action>
-        </v-list-item>
-      </v-list></v-card
-    >
+        <file :dir_now="dir_now"></file> </v-list
+    ></v-card>
   </v-main>
 </template>
 <script>
+import File from "./File.vue";
 import DiologAddDir from "./DialogAddDir.vue";
 import axios from "axios";
 export default {
   components: {
     DiologAddDir,
+    File,
   },
   data: () => ({
     //模态框
     dialog: false,
     // 面包屑导航
     directorys: [],
-    files: [
-      {
-        file_name: "book",
-        file_upload_time: "Jan 20, 2014",
-      },
-    ],
     dir_now: {
       dir_id: 1,
       dir_name: "books",
@@ -156,12 +131,17 @@ export default {
       axios
         .post("/index/index/file/get_nav", post)
         .then((res) => {
-          console.log(res);
           this.directory_nav = res.data;
         })
         .catch(function (error) {
           console.log(error);
         });
+    },
+    //返回上级目录
+    getBack() {
+      //设置当前目录为总目录倒数第二个目录即可
+      let temp = this.directory_nav.slice(-2, -1);
+      this.dir_now = temp[0];
     },
   },
   //获取目录及文件列表

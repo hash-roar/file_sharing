@@ -1,8 +1,5 @@
 
 <template>
-  <!-- <v-container>
-   
-  </v-container> -->
   <div>
      <!-- 导航抽屉 -->
     <v-navigation-drawer v-model="drawer" app>

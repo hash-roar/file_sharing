@@ -10,7 +10,6 @@
 
     <!-- 底部 -->
     <v-footer color="indigo" app>
-      <v-btn @click="getMess">{{message}}sac</v-btn>
       <span class="white--text">&copy; {{ new Date().getFullYear() }}</span>
     </v-footer>
     
