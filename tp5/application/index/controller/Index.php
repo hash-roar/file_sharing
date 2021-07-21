@@ -1,9 +1,9 @@
 <?php
 namespace app\index\controller;
 
-use think\facade\Log;
+use think\Controller;
 
-class Index
+class Index extends Controller
 {
     public function index()
     {

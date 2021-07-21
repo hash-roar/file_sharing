@@ -1,16 +1,16 @@
-INSERT INTO directory (
-    dir_id,
-    dir_parentid,
-    dir_name,
-    dir_file_num,
-    dir_acu_path,
-    dir_create_time
+INSERT INTO admin_user (
+    user_id,
+    user_name,
+    user_password,
+    user_email,
+    user_create_time,
+    user_realname
   )
 VALUES (
     1,
-    0,
-    "books",
-    0,
-    "../uploads/",
-    now()
+    'root',
+    '123456789',
+    '11',
+    now(),
+    'lf'
   );
