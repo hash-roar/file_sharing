@@ -9,13 +9,13 @@ module.exports = {
     https: false,
     hotOnly: false,
     proxy: { // 配置跨域
-      '/index': {
+      '/': {
         //要访问的跨域的api的域名
         target: 'http://localhost:80',
         ws: true,
         changOrigin: true,
         pathRewrite: {
-          '^/index': ''
+          '^/': ''
         }
       }
     },

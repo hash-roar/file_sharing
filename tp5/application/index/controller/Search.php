@@ -17,7 +17,7 @@ class Search extends Controller
     public function get_book_list(){
         $book_name = $this->request->param("book_name");
         $fileMod = new FileMod();
-        $result = $fileMod->wherelike("file_name","%".$book_name."%")->limit(10)->select();
+        $result = $fileMod->wherelike("file_name","%".$book_name."%")->limit(15)->select();
         return json($result);
     }
 }

@@ -3,6 +3,7 @@
     <v-container class="mx-auto pa-0 mt-16">
       <v-card max-width="950">
         <v-card-title class="text-center"> 搜书 </v-card-title>
+        <!-- <v-card-subtitle>支持按书名搜索</v-card-subtitle> -->
         <v-divider></v-divider>
         <v-card-text>
           <v-text-field
@@ -59,7 +60,7 @@ export default {
         book_name: this.book_name,
       };
       axios
-        .post("/index/index/search/get_book_list", post)
+        .post("/index/search/get_book_list", post)
         .then((res) => {
           this.files = res.data;
         })
@@ -69,7 +70,7 @@ export default {
     },
     getFilePath(item) {
       let path = item.file_acu_path;
-      let fullpath = "/index" + path.slice(1);
+      let fullpath =  path.slice(1);
       return fullpath;
     },
   },

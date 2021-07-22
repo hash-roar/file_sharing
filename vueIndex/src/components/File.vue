@@ -1,22 +1,10 @@
 <template>
   <div>
-    <!-- //上传文件模态框 -->
-    <v-dialog max-width="300" v-model="dialog">
-      <dialog-add-file
-        @close-dialog="closeDialog"
-        :dir_now="dir_now"
-        @getnew="getdata"
-      ></dialog-add-file>
-    </v-dialog>
+
     <!-- file部分页头 -->
     <v-subheader inset v-if="files.length"
       >Files
       <v-spacer></v-spacer>
-      <v-btn icon>
-        <v-icon color="grey lighten-1" @click.stop="dialog = !dialog"
-          >mdi-plus</v-icon
-        >
-      </v-btn>
     </v-subheader>
 
     <v-list-item v-for="item in files" :key="item.file_id">
@@ -40,11 +28,9 @@
   </div>
 </template>
 <script>
-import DialogAddFile from "./DialogAddFile.vue";
 import axios from "axios";
 export default {
   components: {
-    DialogAddFile,
   },
   data: () => ({
     dialog: false,

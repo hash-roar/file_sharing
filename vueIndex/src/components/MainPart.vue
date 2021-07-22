@@ -13,21 +13,6 @@
             </template>
           </v-breadcrumbs>
           <v-spacer></v-spacer>
-
-          <v-btn icon>
-            <v-icon color="grey lighten-1" @click.stop="dialog = !dialog"
-              >mdi-plus</v-icon
-            >
-          </v-btn>
-          <!-- 模态框 -->
-          <v-dialog max-width="300" v-model="dialog">
-            <diolog-add-dir
-              :dir_now="dir_now"
-              @close-dialog="closeDialog"
-              @getnew="getdata"
-            >
-            </diolog-add-dir>
-          </v-dialog>
         </v-subheader>
 
         <v-list-item v-if="directory_nav.length - 1" @click="getBack">
@@ -70,11 +55,9 @@
 </template>
 <script>
 import File from "./File.vue";
-import DiologAddDir from "./DialogAddDir.vue";
 import axios from "axios";
 export default {
   components: {
-    DiologAddDir,
     File,
   },
   data: () => ({
