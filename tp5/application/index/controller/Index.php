@@ -2,7 +2,6 @@
 namespace app\index\controller;
 
 use think\Controller;
-use think\facade\Log;
 
 class Index extends Controller
 {
