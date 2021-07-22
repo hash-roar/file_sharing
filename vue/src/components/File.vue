@@ -9,7 +9,7 @@
       ></dialog-add-file>
     </v-dialog>
     <!-- file部分页头 -->
-    <v-subheader inset v-if="files.length"
+    <v-subheader inset
       >Files
       <v-spacer></v-spacer>
       <v-btn icon>
