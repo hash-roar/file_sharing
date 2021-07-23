@@ -55,11 +55,10 @@ VALUES (
     0,
     "books",
     0,
-    "../uploads/",
+    "./uploads/",
     now()
   );
-##### 大文件上传
-
+#####大文件上传
 	nginx配置加上  client_max_body_size 100m;
 	php.ini 改变
 	upload_max_filesize = 100M;
