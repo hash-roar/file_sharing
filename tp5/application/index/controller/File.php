@@ -9,6 +9,8 @@ use app\index\model\File as FileModel;
 class File extends Controller
 {
     protected $Rootpath = "./uploads/";
+    protected $uploads_path = "uploads";
+    protected $uploading_path = "uploads/uploading_temp";
     public function index()
     {
         $test = DirModel::get(1);
@@ -56,63 +58,79 @@ class File extends Controller
         }
         return json($NavArray);
     }
-    // 上传文件
-    public function upload_file()
+    public function upload()
     {
-        $files = $this->request->file("filesinput");
-        //没有文件
-        if (!$files) {
-            return "files not found";
+        $post =  (array)json_decode($this->request->param("post"));
+        //错误抛出
+        $dir_now = $post["dir_now"];
+        $dir_now = (array)$dir_now;
+        if (!$dir_now) return "directory not found";
+        $file = $this->request->file("slice");
+        if (!$file) return "file not upload";
+        //根据md5名字建立临时文件夹
+        $md5_name = md5($post["file_name"]);
+        $uploading_path_name = $this->uploading_path . "/" . $md5_name;
+        if (!file_exists($uploading_path_name)) {
+            mkdir($uploading_path_name);
         }
-        $dir_now = (array)json_decode($this->request->param("dir_now"));
-        //没有目录
-        if (!$dir_now) {
-            return "directory not found";
-        }
-        $path = $dir_now["dir_acu_path"] . "/";
-        //判断有无目录,没有则创建
-        if (!is_dir($path)) {
-            $mkdir_result = mkdir($path, 0777, true);
-            if (!$mkdir_result) {
-                return "mkdir fail";
+        //移动文件
+        $info  = $file->move($uploading_path_name, $post["index"] . "", true, false);
+        // 当文件夹里有所有文件时合并文件
+        if (count(scandir($uploading_path_name)) == $post["chunk_num"] + 2) {
+            $file_path = $dir_now["dir_acu_path"];
+            if(!file_exists($file_path))
+            {
+                mkdir($file_path,0777,true);
             }
-        }
-        //实例化文件模型对象
-
-        //完成文件移动及数据库入库操作
-        foreach ($files as $file) {
-            $info = $file->move($path, "");
-            if ($info) {
-                $file_info = $info->getInfo();
-                $name = $info->getSavename();
-                $dir_acu_path = $path . $name;
-                $insertData = [
-                    "file_name" => $file_info["name"],
-                    "file_dir_id" => $dir_now["dir_id"],
-                    "file_acu_path" => $dir_acu_path,
-                    "file_upload_time" => date("Y-m-d H:i:s"),
-                    "file_size"     => $file_info["size"],
-                    "file_md5_name" => $name,
-                    "file_type"      => $file_info["type"]
-                ];
-                $fileMod = new FileModel();
-                $insert_result = $fileMod->save($insertData);
-                if (!$insert_result) {
-                    return "文件信息插入失败";
-                }
-            } else {
-                return $file->getError();
+            for ($i = 0; $i < $post["chunk_num"]; $i++) {
+                $temp_data = file_get_contents($uploading_path_name . "/" . $i);
+                file_put_contents($file_path . "/" . $post["file_name"], $temp_data, FILE_APPEND);
             }
+            //数据库操作
+            $filetype = explode(".", $post["file_name"]);
+            $insertData = [
+                "file_name" => $post["file_name"],
+                "file_dir_id" => $dir_now["dir_id"],
+                "file_acu_path" => $dir_now["dir_acu_path"] . "/" . $post["file_name"],
+                "file_upload_time" => date("Y-m-d H:i:s"),
+                "file_size"     => $post["file_total_size"],
+                "file_md5_name" => md5($post["file_name"]),
+                "file_type"      => array_pop($filetype)
+            ];
+            $fileMod = new FileModel();
+            $insert_result = $fileMod->save($insertData);
+            if (!$insert_result) {
+                return "文件信息插入失败";
+            }
+            //让文件夹下文件数量加1,在redis上操作更合适,现在直接在mysql数据库上操作
+            $dirMod = new DirModel();
+            $dirMod->where("dir_id", $dir_now["dir_id"])->setInc("dir_file_num", 1);
+            return "文件上传成功";
+        } else {
+            return "分片" . $post["index"] . "上传成功";
         }
-        //文件夹数据库新增文件数
-        $dirMod = new DirModel();
-        $dirMod->where("dir_id", $dir_now["dir_id"])->setInc("dir_file_num", count($files));
-        return "success";
     }
+    //删除文件夹
+    public function deleteAll()
+    {
+        $temp_dir_array = scandir($this->uploading_path);
+        foreach ($temp_dir_array as $dir) {
+            if ($dir != "." && $dir != "..") {
+                $temp_file_array = scandir($this->uploading_path . "/" . $dir);
+                foreach ($temp_file_array as $file) {
+                    if ($file != "." && $file != "..") {
+                        unlink($this->uploading_path . "/" . $dir . "/" . $file);
+                    }
+                }
+                rmdir($this->uploading_path . "/" . $dir);
+            }
+        }
+        return "删除成功";
+    }
+
     //文件下载
     public function download_file()
     {
-        
     }
     //添加目录
     public function add_directory()
